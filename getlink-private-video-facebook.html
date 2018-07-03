@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="http://www.iconarchive.com/download/i97515/sicons/basic-round-social/facebook.ico">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+	<title>Getlink Private Video Facebook</title>
+	<script>
+		function getVideoID(url) {
+			return (url.indexOf("videos") !== -1) ? splitBy("videos/", "/", url) : (url.indexOf("permalink") !== -1) ? splitBy("permalink/", "/", url) : null;
+		}
+		function splitBy(begin, end, data) {
+			data = data.split(begin);
+			data = data[1].split(end);
+			return data[0];
+		}
+
+		$(document).ready(function() {
+			$("button#submit").click(function() {
+				let token = $("#token").val();
+				if (!token) {
+					alert("Token is required.");
+					return;
+				}
+				let url = $("#url").val();
+				if (!url) {
+					alert("URL is required.");
+					return;
+				}
+				$.getJSON(`https://graph.facebook.com/${getVideoID(url)}?fields=source&access_token=${token}`, function(result) {
+					$("#video").html(`<hr><video class="container-fluid" controls autoplay><source src="${result.source}" type="video/mp4"></video>`);
+				});
+			});
+		});
+	</script>
+	<style>
+		body { background-color: #ddd; }
+		#main { padding-top: 10%; }
+	</style>
+</head>
+<body>
+<div id="main" class="container">
+	<div class="card">
+		<div class="card-header bg-dark text-white">Please fill out all information below</div>
+		<div class="card-body bg-secondary text-white">
+			<div class="container-fluid">
+				<div class="input-group mb-3">
+					<div class="input-group-append">
+						<span class="input-group-text">Token:</span>
+					</div>
+					<input type="text" class="form-control" id="token" placeholder="EAAA...">
+				</div>
+				<div class="input-group mb-3">
+					<div class="input-group-append">
+						<span class="input-group-text">URL:</span>
+					</div>
+					<input type="text" class="form-control" id="url" placeholder="https://www.facebook.com/100005851262506/videos/815226605349041/">
+				</div>
+				<button id="submit" class="btn btn-dark offset-10">Submit</button>
+				<div id="video"></div>
+			</div>
+		</div>
+		<div class="card-footer text-right bg-dark text-white">Copyright &copy; <a href="https://www.facebook.com/100005851262506" target="_blank">Emy Yume</a>.</div>
+	</div>
+</div>
+</body>
+</html>
